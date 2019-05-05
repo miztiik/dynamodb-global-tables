@@ -12,7 +12,7 @@ The following is a conceptual overview of how a global table is created.
 1. Repeat step 1 for every other AWS region where you want to replicate your data.
 1. Define a DynamoDB global table, based upon the tables that you have created.
 
-![AWS DynamoDB Global Tables](images/miztiik-dynamo-global-tables.png)
+![AWS DynamoDB Global Tables](images/miztiik-dynamo-global-tables-multi-master-multi-region.png)
 
 #### Follow this article in [Youtube](https://youtube.com/c/valaxytechnologies)
 
