@@ -14,6 +14,8 @@ The following is a conceptual overview of how a global table is created.
 
 ![AWS DynamoDB Global Tables](images/miztiik-dynamo-global-tables.png)
 
+#### Follow this article in [Youtube](https://youtube.com/c/valaxytechnologies)
+
 ## Setup The Tables
 
 - Region 1 - Mumbai
