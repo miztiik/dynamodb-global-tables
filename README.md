@@ -2,26 +2,21 @@
 
 As a learning exercise, lets use the AWS Documentation and find out how to create Global Multi Master, Multi Region database with DynamoDB and verify latency.
 
-A _global table_ is a collection of one or more replica tables, all owned by a single AWS account.
-
-A _replica table_ (or replica, for short) is a single DynamoDB table that functions as a part of a global table. Each replica stores the same set of data items. Any given global table can only have one replica table per region.
-
-The following is a conceptual overview of how a global table is created.
-
-1. Create an ordinary DynamoDB table, with DynamoDB Streams enabled, in an AWS region.
-1. Repeat step 1 for every other AWS region where you want to replicate your data.
-1. Define a DynamoDB global table, based upon the tables that you have created.
+A _global table_ is a collection of one or more replica tables, all owned by a single AWS account. A _replica table_ (or replica, for short) is a single DynamoDB table that functions as a part of a global table. Each replica stores the same set of data items. Any given global table can only have one replica table per region.
 
 ![AWS DynamoDB Global Tables](images/miztiik-dynamo-global-tables-multi-master-multi-region.png)
 
-#### Follow this article in [Youtube](https://youtube.com/c/valaxytechnologies)
+#### Follow this article in [Youtube](https://youtu.be/ibjuH9A3Wmg)
 
 ## Setup The Tables
+The following is a conceptual overview of how a global table is created.
 
-- Region 1 - Singapore
-- Region 2 - Virginia
-- Region 3 - Ireland
-- Log Retention Days: Defaults to 14 days
+1. Create an ordinary DynamoDB table, with DynamoDB Streams enabled, in an AWS region.
+    - Region 1 - Singapore
+    - Region 2 - Virginia
+    - Region 3 - Ireland
+1. Repeat step 1 for every other AWS region where you want to replicate your data.
+1. Define a DynamoDB global table, based upon the tables that you have created.
 
 1. Create a new table (`Music`) in Singapore, with DynamoDB Streams enabled (`NEW_AND_OLD_IMAGES`):
 
@@ -124,15 +119,15 @@ The following is a conceptual overview of how a global table is created.
 Lets do some crude inserts and time their replication
 
 ```bash
-for i in {1..5}
+for i in {2..10}
  do
   val=${RANDOM}
+  t=2
   # Insert Items
-  echo "Inserting Item:item_`${i}`"
-  time aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-southeast-1
-  sleep 0.25
+  echo -e "\n\n-=-=- Inserting Item:item_${i} and Retrieving after ${t} Seconds -=-=-"
+  aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-southeast-1
+  sleep ${t}
   # Read Items
-  echo "Retrieving Item:item_`${i}` after 0.25 Seconds"
   time aws dynamodb get-item --table-name Music --key '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region eu-west-1
  done
 ```
