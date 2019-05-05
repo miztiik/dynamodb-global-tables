@@ -119,21 +119,21 @@ The following is a conceptual overview of how a global table is created.
 
 ## Timing Your Insert/Read Queries
 
-  Lets do some crude inserts and time their replication
+Lets do some crude inserts and time their replication
 
-    ```bash
-    for i in {1..5}
-     do
-      val=${RANDOM}
-      # Insert Items
-      echo "Inserting Item:item_`${i}`"
-      time aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-south-1
-      sleep 0.25
-      # Read Items
-      echo "Retrieving Item:item_`${i}` after 0.25 Seconds"
-      time aws dynamodb get-item --table-name Music --key '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region eu-west-1
-     done
-    ```
+```bash
+for i in {1..5}
+ do
+  val=${RANDOM}
+  # Insert Items
+  echo "Inserting Item:item_`${i}`"
+  time aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-south-1
+  sleep 0.25
+  # Read Items
+  echo "Retrieving Item:item_`${i}` after 0.25 Seconds"
+  time aws dynamodb get-item --table-name Music --key '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region eu-west-1
+ done
+```
   
 ## Contact Us
 
