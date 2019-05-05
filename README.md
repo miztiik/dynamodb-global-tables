@@ -1,6 +1,6 @@
-# AWS DynamoDB Global Tables
+# AWS DynamoDB Global Tables: Multi Region, Multi Master Database
 
-As a learning exercise, lets us AWS Documentation and find out how to create Global Multi Master, Multi Region database.
+As a learning exercise, lets use the AWS Documentation and find out how to create Global Multi Master, Multi Region database with DynamoDB and verify latency.
 
 A _global table_ is a collection of one or more replica tables, all owned by a single AWS account.
 
@@ -117,6 +117,24 @@ The following is a conceptual overview of how a global table is created.
         --region eu-west-1
     ```
 
+## Timing Your Insert/Read Queries
+
+  Lets do some crude inserts and time their replication
+
+    ```bash
+    for i in {1..5}
+     do
+      val=${RANDOM}
+      # Insert Items
+      echo "Inserting Item:item_`${i}`"
+      time aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-south-1
+      sleep 0.25
+      # Read Items
+      echo "Retrieving Item:item_`${i}` after 0.25 Seconds"
+      time aws dynamodb get-item --table-name Music --key '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region eu-west-1
+     done
+    ```
+  
 ## Contact Us
 
 You can reach out to us to get more details through [here](https://youtube.com/c/valaxytechnologies/about).
