@@ -18,12 +18,12 @@ The following is a conceptual overview of how a global table is created.
 
 ## Setup The Tables
 
-- Region 1 - Mumbai
+- Region 1 - Singapore
 - Region 2 - Virginia
 - Region 3 - Ireland
 - Log Retention Days: Defaults to 14 days
 
-1. Create a new table (`Music`) in Mumbai, with DynamoDB Streams enabled (`NEW_AND_OLD_IMAGES`):
+1. Create a new table (`Music`) in Singapore, with DynamoDB Streams enabled (`NEW_AND_OLD_IMAGES`):
 
     ```bash
     aws dynamodb create-table \
@@ -37,7 +37,7 @@ The following is a conceptual overview of how a global table is created.
         --provisioned-throughput \
             ReadCapacityUnits=1,WriteCapacityUnits=1 \
         --stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES \
-        --region ap-south-1
+        --region ap-southeast-1
     ```
 
 1. Create an identical `Music` table in US East (N. Virginia):
@@ -57,13 +57,13 @@ The following is a conceptual overview of how a global table is created.
         --region us-east-1
     ```
 
-1. Create a global table (`Music`) consisting of replica tables in the *ap-south-1* and *us-east-1* regions.
+1. Create a global table (`Music`) consisting of replica tables in the *ap-southeast-1* and *us-east-1* regions.
 
     ```bash
     aws dynamodb create-global-table \
         --global-table-name Music \
-        --replication-group RegionName=ap-south-1 RegionName=us-east-1 \
-        --region ap-south-1
+        --replication-group RegionName=ap-southeast-1 RegionName=us-east-1 \
+        --region ap-southeast-1
     ```
 
 1. Create another table in EU (Ireland), with the same settings as those you created in Step 1 and Step 2:
@@ -89,18 +89,18 @@ The following is a conceptual overview of how a global table is created.
     aws dynamodb update-global-table \
         --global-table-name Music \
         --replica-updates 'Create={RegionName=eu-west-1}' \
-        --region ap-south-1
+        --region ap-southeast-1
     ```
 
 ## Verify Global Replication
 
-1. To verify that replication is working, add a new item to the Music table in Mumbai:
+1. To verify that replication is working, add a new item to the Music table in Singapore:
 
     ```bash
     aws dynamodb put-item \
         --table-name Music \
         --item '{"Artist": {"S":"item_1"},"SongTitle": {"S":"Song Value 1"}}' \
-        --region ap-south-1
+        --region ap-southeast-1
     ```
 
 1. Wait for a few seconds, and then check to see if the item has been successfully replicated to US East (N\. Virginia) and EU (Ireland):
@@ -129,7 +129,7 @@ for i in {1..5}
   val=${RANDOM}
   # Insert Items
   echo "Inserting Item:item_`${i}`"
-  time aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-south-1
+  time aws dynamodb put-item --table-name Music --item '{"Artist": {"S":"item_'${i}'"},"SongTitle": {"S":"Song Value '${val}'"}}' --region ap-southeast-1
   sleep 0.25
   # Read Items
   echo "Retrieving Item:item_`${i}` after 0.25 Seconds"
